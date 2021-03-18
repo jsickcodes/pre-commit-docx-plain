@@ -1,0 +1,6 @@
+- id: docxplain
+  name: Docx plain text mirror
+  description: Mirror an Office (docx) document in plain text.
+  entry: docxplain
+  language: python
+  files: "\\.docx$"
