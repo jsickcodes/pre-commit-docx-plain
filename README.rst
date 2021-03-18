@@ -1,0 +1,103 @@
+#####################
+pre-commit-docx-plain
+#####################
+
+**Pre-commit hook for mirroring Word (docx) files into plain text files (using Pandoc).**
+
+This pre-commit hook provides a solution for organizations that manage Word (.docx) documents with Git and GitHub.
+With this hook, whenever a Word document is committed or updated in a Git repository, a plain text version is also created.
+You can use this plain-text mirror to facilitate GitHub Pull Request reviews.
+
+Set up
+======
+
+At the root of your document's Git repository, add a file named ``.pre-commit-config.yaml`` with the following contents::
+
+   repos:
+     - repo: https://github.com/jsickcodes/pre-commit-docx-plain
+       rev: 0.1.0
+       hooks:
+         - id: docxplain
+
+Next, you'll need to install pre-commit (if you haven't already)::
+
+   pip install -U pre-commit
+
+Initialize the pre-commit hooks in the repository itself::
+
+   pre-commit install
+
+If the repository has an existing Word document, it is a good idea to create the mirrored plain text file now::
+
+   pre-commit run --all-files
+
+Commit the plain text (``.txt``) file that is generated.
+
+Local usage
+===========
+
+If you are contributing to a repository using ``pre-commit-docx-plain``, you will also need to install pre-commit itself and install the pre-commit hooks in your local clone of the repository::
+
+   pre-commit install -U pre-commit
+   pre-commit install
+
+Now, when you update and commit changes to the Word file in your repository, pre-commit will run the ``pre-commit-docx-plain`` hook and generate a new or updated mirror of the file in plain text.
+Use ``git add`` to stage the plain text file and try your ``git commit`` again.
+On this second try, the plain text mirror file should be in sync with the Word file, and the commit can go ahead.
+
+Usage with GitHub Actions
+=========================
+
+You can run ``pre-commit-docx-plain`` in GitHub Actions to ensure that the plain-text mirror file is always up-to-date.
+If the repository does not already have a GitHub Actions workflow, create a file with the path ``.github/workflows/ci.yaml`` with the following contents::
+
+   name: CI
+
+   "on": [push, pull_request]
+
+   jobs:
+     pre-commit:
+       runs-on: ubuntu-latest
+
+       steps:
+         - uses: actions/checkout@v2
+
+         - name: Set up Python
+           uses: actions/setup-python@v2
+
+         - name: Run pre-commit hooks
+           uses: pre-commit/action@v2.0.0
+
+This workflow will generate a build "failure" if the plain-text mirror file is out of date with the Word file in the repository — as might happen if a contributor did not install pre-commit locally.
+
+Automatically generate the plain text mirror from GitHub Actions
+================================================================
+
+To avoid complexities related to installing pre-commit, the GitHub Actions workflow can be configured to automatically generate, commit, and push updates to the plain text mirror.
+The ``.github/workflows/ci.yaml`` file::
+
+   name: CI
+
+   "on": [push, pull_request]
+
+   jobs:
+     pre-commit:
+       runs-on: ubuntu-latest
+
+       steps:
+         - uses: actions/checkout@v2
+           with:
+             fetch-depth: 0
+
+         - name: Set up Python
+           uses: actions/setup-python@v2
+
+         - name: Run pre-commit hooks
+           uses: pre-commit/action@v2.0.0
+           with:
+             token: ${{ secrets.GITHUB_TOKEN }}
+
+Note that this workflow can only run with private repositories.
+The ``GITHUB_TOKEN`` secret is not available to public forks.
+
+When using this workflow, contributors need to either pull down the plain text file update to their local branch, or be prepared to use a forced push (``git push --force``) because their branch is "behind" the GitHub origin.
