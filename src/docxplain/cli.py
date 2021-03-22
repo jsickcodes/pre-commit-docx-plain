@@ -10,7 +10,7 @@ def main() -> None:
     """Command-line entrypoint."""
     parser = create_parser()
     args = parser.parse_args()
-    changed = convert_file(args.source)
+    changed = convert_file(args.source, suffix=args.suffix)
     if changed:
         sys.exit(1)
     else:
@@ -20,5 +20,8 @@ def main() -> None:
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Convert docx to plain text.")
     parser.add_argument("source")
+    parser.add_argument(
+        "--suffix", default=".txt", help="File suffix for plain text file."
+    )
 
     return parser

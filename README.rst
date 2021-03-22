@@ -101,3 +101,23 @@ Note that this workflow can only run with private repositories.
 The ``GITHUB_TOKEN`` secret is not available to public forks.
 
 When using this workflow, contributors need to either pull down the plain text file update to their local branch, or be prepared to use a forced push (``git push --force``) because their branch is "behind" the GitHub origin.
+
+Configuration
+=============
+
+This pre-commit hook works out of the box, but does allow for some customization.
+
+Plain text filename suffix
+--------------------------
+
+By default, if the Word file is named ``document.docx``, the plain text mirror file is named ``document.txt``.
+However, you can customize the suffix of the file name by setting a ``--suffix`` command-line option::
+
+   repos:
+     - repo: https://github.com/jsickcodes/pre-commit-docx-plain
+       rev: 0.2.0
+       hooks:
+         - id: docxplain
+           args:
+             - "prefix"
+             - ".extracted.txt"

@@ -8,8 +8,17 @@ import pypandoc
 __all__ = ["convert_file", "get_hash"]
 
 
-def convert_file(filename: str) -> bool:
+def convert_file(filename: str, suffix: str = ".txt") -> bool:
     """Convert the docx file to plaintext.
+
+    Parameters
+    ----------
+    filename : `str`
+        Path of the docx file.
+    suffix : `str`
+        Suffix for the output plain text file, including ``"."`` prefix.
+        Default is ``".txt"``, but a suffix like ``".extracted.txt"``
+        could be useful.
 
     Returns
     -------
@@ -20,7 +29,7 @@ def convert_file(filename: str) -> bool:
     if not docx_path.is_file():
         raise RuntimeError(f"Source file {docx_path} does not exist.")
 
-    plain_path = docx_path.with_suffix(".txt")
+    plain_path = docx_path.with_suffix(suffix)
     if plain_path.is_file():
         exists = True
         initial_hash = get_hash(plain_path)
