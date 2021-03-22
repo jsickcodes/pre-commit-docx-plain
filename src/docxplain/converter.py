@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
+from typing import Optional
 
 import pypandoc
 
 __all__ = ["convert_file", "get_hash"]
 
 
-def convert_file(filename: str, suffix: str = ".txt") -> bool:
+def convert_file(
+    filename: str, suffix: str = ".txt", header: Optional[str] = None
+) -> bool:
     """Convert the docx file to plaintext.
 
     Parameters
@@ -19,6 +22,8 @@ def convert_file(filename: str, suffix: str = ".txt") -> bool:
         Suffix for the output plain text file, including ``"."`` prefix.
         Default is ``".txt"``, but a suffix like ``".extracted.txt"``
         could be useful.
+    header : `str`, optional
+        Content that is added to the top of the plain text file.
 
     Returns
     -------
@@ -38,6 +43,9 @@ def convert_file(filename: str, suffix: str = ".txt") -> bool:
 
     pypandoc.convert_file(str(docx_path), "plain", outputfile=str(plain_path))
 
+    if header:
+        insert_header(plain_path, header, docx_path.name)
+
     if exists:
         final_hash = get_hash(plain_path)
         return final_hash != initial_hash
@@ -45,8 +53,16 @@ def convert_file(filename: str, suffix: str = ".txt") -> bool:
         return True
 
 
+def insert_header(path: Path, header: str, docx_name: str) -> None:
+    """Add a header to the beginning of a plain text file."""
+    content = path.read_text()
+    context = {"docx": docx_name}
+    content = "\n\n".join((header.format(**context), content))
+    path.write_text(content)
+
+
 def get_hash(path: Path) -> str:
-    """Get the SHA256 hash diget of a file."""
+    """Get the SHA256 hash digest of a file."""
     m = hashlib.sha256()
     m.update(path.read_bytes())
     return m.hexdigest()
