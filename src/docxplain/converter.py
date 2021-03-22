@@ -44,7 +44,7 @@ def convert_file(
     pypandoc.convert_file(str(docx_path), "plain", outputfile=str(plain_path))
 
     if header:
-        insert_header(plain_path, header)
+        insert_header(plain_path, header, docx_path.name)
 
     if exists:
         final_hash = get_hash(plain_path)
@@ -53,10 +53,11 @@ def convert_file(
         return True
 
 
-def insert_header(path: Path, header: str) -> None:
+def insert_header(path: Path, header: str, docx_name: str) -> None:
     """Add a header to the beginning of a plain text file."""
     content = path.read_text()
-    content = "\n\n".join((header, content))
+    context = {"docx": docx_name}
+    content = "\n\n".join((header.format(**context), content))
     path.write_text(content)
 
 
