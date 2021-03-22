@@ -61,7 +61,7 @@ def insert_header(path: Path, header: str) -> None:
 
 
 def get_hash(path: Path) -> str:
-    """Get the SHA256 hash diget of a file."""
+    """Get the SHA256 hash digest of a file."""
     m = hashlib.sha256()
     m.update(path.read_bytes())
     return m.hexdigest()
