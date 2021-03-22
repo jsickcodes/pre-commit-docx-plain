@@ -23,5 +23,10 @@ def create_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--suffix", default=".txt", help="File suffix for plain text file."
     )
+    parser.add_argument(
+        "--header",
+        default=None,
+        help="Content to add to the top of the plain text file.",
+    )
 
     return parser
