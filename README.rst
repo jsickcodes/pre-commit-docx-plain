@@ -119,7 +119,7 @@ However, you can customize the suffix of the file name by setting a ``--suffix``
        hooks:
          - id: docxplain
            args:
-             - "--prefix"
+             - "--suffix"
              - ".extracted.txt"
 
 Plain text file header
