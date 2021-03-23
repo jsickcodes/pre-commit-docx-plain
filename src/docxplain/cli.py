@@ -10,7 +10,7 @@ def main() -> None:
     """Command-line entrypoint."""
     parser = create_parser()
     args = parser.parse_args()
-    changed = convert_file(args.source, suffix=args.suffix)
+    changed = convert_file(args.source, suffix=args.suffix, header=args.header)
     if changed:
         sys.exit(1)
     else:
