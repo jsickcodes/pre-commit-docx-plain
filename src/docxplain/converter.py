@@ -2,15 +2,21 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import pypandoc
+
+if TYPE_CHECKING:
+    from docxplain.formats import PandocFormat
 
 __all__ = ["convert_file", "get_hash"]
 
 
 def convert_file(
-    filename: str, suffix: str = ".txt", header: Optional[str] = None
+    filename: str,
+    output_format: PandocFormat,
+    suffix: Optional[str] = None,
+    header: Optional[str] = None,
 ) -> bool:
     """Convert the docx file to plaintext.
 
@@ -18,10 +24,12 @@ def convert_file(
     ----------
     filename : `str`
         Path of the docx file.
-    suffix : `str`
-        Suffix for the output plain text file, including ``"."`` prefix.
-        Default is ``".txt"``, but a suffix like ``".extracted.txt"``
-        could be useful.
+    output_format : `docxplain.formats.PandocFormat`
+        The output format for the converted plain text file.
+    suffix : `str`, optional
+        Custom suffix for the output plain text file, including ``"."`` prefix.
+        Default is based on the output format, but a custom suffix like
+        ``".extracted.txt"`` can be useful.
     header : `str`, optional
         Content that is added to the top of the plain text file.
 
@@ -34,7 +42,12 @@ def convert_file(
     if not docx_path.is_file():
         raise RuntimeError(f"Source file {docx_path} does not exist.")
 
-    plain_path = docx_path.with_suffix(suffix)
+    if suffix is None:
+        file_suffix = ".txt"
+    else:
+        file_suffix = suffix
+
+    plain_path = docx_path.with_suffix(file_suffix)
     if plain_path.is_file():
         exists = True
         initial_hash = get_hash(plain_path)
