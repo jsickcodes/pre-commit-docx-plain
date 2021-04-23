@@ -2,15 +2,19 @@ from __future__ import annotations
 
 import hashlib
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 import pypandoc
+
+if TYPE_CHECKING:
+    from docxplain.formats import PandocFormat
 
 __all__ = ["convert_file", "get_hash"]
 
 
 def convert_file(
     filename: str,
+    output_format: PandocFormat,
     suffix: Optional[str] = None,
     header: Optional[str] = None,
 ) -> bool:
@@ -20,10 +24,12 @@ def convert_file(
     ----------
     filename : `str`
         Path of the docx file.
+    output_format : `docxplain.formats.PandocFormat`
+        The output format for the converted plain text file.
     suffix : `str`, optional
-        Suffix for the output plain text file, including ``"."`` prefix.
-        Default is ``".txt"``, but a suffix like ``".extracted.txt"``
-        could be useful.
+        Custom suffix for the output plain text file, including ``"."`` prefix.
+        Default is based on the output format, but a custom suffix like
+        ``".extracted.txt"`` can be useful.
     header : `str`, optional
         Content that is added to the top of the plain text file.
 
