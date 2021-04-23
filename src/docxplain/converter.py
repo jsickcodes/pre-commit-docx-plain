@@ -46,6 +46,8 @@ def convert_file(
     if header:
         insert_header(plain_path, header, docx_path.name)
 
+    trim_trailing_whitespace(plain_path)
+
     if exists:
         final_hash = get_hash(plain_path)
         return final_hash != initial_hash
@@ -59,6 +61,16 @@ def insert_header(path: Path, header: str, docx_name: str) -> None:
     context = {"docx": docx_name}
     content = "\n\n".join((header.format(**context), content))
     path.write_text(content)
+
+
+def trim_trailing_whitespace(path: Path) -> None:
+    """Trim trailing whitespace from the plain text file, updating it
+    in place.
+    """
+    content = path.read_text()
+    formatted_lines = [line.rstrip() for line in content.splitlines()]
+    new_content = "\n".join(formatted_lines) + "\n"
+    path.write_text(new_content)
 
 
 def get_hash(path: Path) -> str:
