@@ -10,7 +10,9 @@ __all__ = ["convert_file", "get_hash"]
 
 
 def convert_file(
-    filename: str, suffix: str = ".txt", header: Optional[str] = None
+    filename: str,
+    suffix: Optional[str] = None,
+    header: Optional[str] = None,
 ) -> bool:
     """Convert the docx file to plaintext.
 
@@ -18,7 +20,7 @@ def convert_file(
     ----------
     filename : `str`
         Path of the docx file.
-    suffix : `str`
+    suffix : `str`, optional
         Suffix for the output plain text file, including ``"."`` prefix.
         Default is ``".txt"``, but a suffix like ``".extracted.txt"``
         could be useful.
@@ -34,7 +36,12 @@ def convert_file(
     if not docx_path.is_file():
         raise RuntimeError(f"Source file {docx_path} does not exist.")
 
-    plain_path = docx_path.with_suffix(suffix)
+    if suffix is None:
+        file_suffix = ".txt"
+    else:
+        file_suffix = suffix
+
+    plain_path = docx_path.with_suffix(file_suffix)
     if plain_path.is_file():
         exists = True
         initial_hash = get_hash(plain_path)

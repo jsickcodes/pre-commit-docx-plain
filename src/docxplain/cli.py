@@ -21,7 +21,7 @@ def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Convert docx to plain text.")
     parser.add_argument("source")
     parser.add_argument(
-        "--suffix", default=".txt", help="File suffix for plain text file."
+        "--suffix", default=None, help="File suffix for plain text file."
     )
     parser.add_argument(
         "--header",
