@@ -1,6 +1,11 @@
 Change log
 ==========
 
+Unreleased
+----------
+
+- Trim trailing whitespace from the output.
+
 0.2.0 (2021-03-23)
 ------------------
 
