@@ -53,7 +53,10 @@ If the repository does not already have a GitHub Actions workflow, create a file
 
    name: CI
 
-   "on": [push, pull_request]
+   'on':
+     pull_request:
+     push:
+       branches: [main]
 
    jobs:
      pre-commit:
@@ -69,7 +72,7 @@ If the repository does not already have a GitHub Actions workflow, create a file
            run: brew install pandoc
 
          - name: Run pre-commit hooks
-           uses: pre-commit/action@v2.0.0
+           uses: pre-commit/action@v2.0.3
 
 This workflow will generate a build "failure" if the plain-text mirror file is out of date with the Word file in the repository — as might happen if a contributor did not install pre-commit locally.
 
@@ -81,7 +84,10 @@ The ``.github/workflows/ci.yaml`` file::
 
    name: CI
 
-   "on": [push, pull_request]
+   'on':
+     pull_request:
+     push:
+       branches: [main]
 
    jobs:
      pre-commit:
@@ -99,7 +105,7 @@ The ``.github/workflows/ci.yaml`` file::
            run: brew install pandoc
 
          - name: Run pre-commit hooks
-           uses: pre-commit/action@v2.0.0
+           uses: pre-commit/action@v2.0.3
            with:
              token: ${{ secrets.GITHUB_TOKEN }}
 
