@@ -10,8 +10,13 @@ def main() -> None:
     """Command-line entrypoint."""
     parser = create_parser()
     args = parser.parse_args()
-    changed = convert_file(args.source, suffix=args.suffix, header=args.header)
-    if changed:
+
+    change_count = 0
+    for docx_file in args.source:
+        if convert_file(docx_file, suffix=args.suffix, header=args.header):
+            change_count += 1
+            print(f"Updating plain text mirror of {docx_file}")
+    if change_count > 0:
         sys.exit(1)
     else:
         sys.exit(0)
@@ -19,7 +24,7 @@ def main() -> None:
 
 def create_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Convert docx to plain text.")
-    parser.add_argument("source")
+    parser.add_argument("source", nargs="*", help="Path(s) to Word docx files")
     parser.add_argument(
         "--suffix", default=".txt", help="File suffix for plain text file."
     )

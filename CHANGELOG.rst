@@ -1,6 +1,11 @@
 Change log
 ==========
 
+0.4.0 (2021-05-19)
+------------------
+
+- Support multiple paths as input, which is required for compatibility with pre-commit.
+
 0.3.0 (2021-05-12)
 ------------------
 
